@@ -86,7 +86,18 @@ app.use(express.json());
 
 
 // POST - Agregar un nuevo libro
+app.post("/api/books", (req, res) => {
+    const libro = req.body;
+    const existe = libros.some(libr => libr.id === libro.id);
 
+    if (existe) {
+        res.status(400).json({status: 400, message: "ID duplicado"});
+    } else {
+        libros.push(libro);
+        res.json({status: 200, message: "Success", data: libros});
+    }
+
+});
 
 // PUT - Actualizar un libro existente.
 
