@@ -3,7 +3,15 @@ const app = express();
 const PORT = 3000;
 
 // Simular base con libros
-let libros = [];
+let libros = [
+    {
+        id: 1,
+        titulo: "a",
+        autor: "b",
+        genero: "c",
+        anioPublicacion: 1999
+    }
+];
 
 // Middleware
 app.use(express.json());
