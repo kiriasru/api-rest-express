@@ -91,7 +91,7 @@ app.post("/api/books", (req, res) => {
     const existe = libros.some(libr => libr.id === libro.id);
 
     if (existe) {
-        res.status(400).json({status: 400, message: "ID duplicado"});
+        res.status(409).json({status: 409, message: "ID duplicado"});
     } else {
         libros.push(libro);
         res.json({status: 200, message: "Success", data: libros});
@@ -103,7 +103,19 @@ app.post("/api/books", (req, res) => {
 
 
 // DELETE - Eliminar un libro por su ID
+app.delete("/api/books/:id", (req, res) => {
 
+    const id = parseInt(req.params.id);
+    const filtroLibros = libros.filter(libro => libro.id !== id);
+
+    if (filtroLibros.length !== libros.length) {
+        libros = filtroLibros;
+        res.json({status: 200, message: "Libro eliminado exitosamente"});
+    } else {
+        res.status(404).json({status: 404, message: "Libro no encontrado"});
+    }
+
+});
 
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en http://localhost:${PORT}`);
