@@ -100,6 +100,28 @@ app.post("/api/books", (req, res) => {
 });
 
 // PUT - Actualizar un libro existente.
+app.put ('/api/book/:id', (req, res) => {
+    const id = req.params.id;
+    const libro = req.body;
+    let exist = false;
+    console.log(id);
+    libros.forEach(lbook =>{
+        if(lbook.id == id){
+            exist = true;
+            lbook.titulo = libro.titulo;
+            lbook.autor = libro.autor;
+            lbook.genero = libro.genero;
+            lbook.anioPublicacion = libro.anioPublicacion;  
+        }
+    });
+    if(exist){
+        res.status(200).send({message: 'Libro actualizado correctamente'});
+    }else{
+        res.status(404).send({message: 'Libro no encontrado'});
+    }
+});
+
+
 
 
 // DELETE - Eliminar un libro por su ID
