@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 const PORT = 3000;
 
-// Simular base con libros
 let libros = [
     {
         id: 1,
@@ -76,10 +75,8 @@ let libros = [
     }
 ];
 
-// Middleware
 app.use(express.json());
 
-// GET - Obtener todos los libros
 app.get("/api/books", (req, res) => {
     try {
         
@@ -98,7 +95,6 @@ app.get("/api/books", (req, res) => {
     }
 });
 
-// GET - Obtener un libro por su ID
 app.get("/api/books/:id", (req, res) => {
     try {
         const bookId = parseInt(req.params.id);               
@@ -125,7 +121,6 @@ app.get("/api/books/:id", (req, res) => {
     }
 });
 
-// POST - Agregar un nuevo libro
 app.post("/api/books", (req, res) => {
     const libro = req.body;
     const existe = libros.some(libr => libr.id === libro.id);
@@ -139,7 +134,6 @@ app.post("/api/books", (req, res) => {
 
 });
 
-// PUT - Actualizar un libro existente.
 app.put ('/api/book/:id', (req, res) => {
     const id = req.params.id;
     const libro = req.body;
@@ -161,7 +155,6 @@ app.put ('/api/book/:id', (req, res) => {
     }
 });
 
-// DELETE - Eliminar un libro por su ID
 app.delete("/api/books/:id", (req, res) => {
 
     const id = parseInt(req.params.id);
