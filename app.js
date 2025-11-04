@@ -80,9 +80,55 @@ let libros = [
 app.use(express.json());
 
 // GET - Obtener todos los libros
+app.get("/api/books", (req, res) => {
+    try {
+        console.log("Solicitud para obtener todos los libros");
+        
+        res.status(200).json({
+            success: true,
+            data: libros,
+            count: libros.length,
+            message: `Se encontraron ${libros.length} libros`
+        });
+        
+    } catch (error) {
+        console.error("Error al obtener libros:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error interno del servidor al obtener los libros"
+        });
+    }
+});
 
 
 // GET - Obtener un libro por su ID
+app.get("/api/books/:id", (req, res) => {
+    try {
+        const bookId = parseInt(req.params.id);
+        console.log(`Solicitud para obtener el libro con ID: ${bookId}`);               
+
+        const libro = libros.find(b => b.id === bookId);
+        if (!libro) {
+            return res.status(404).json({
+                success: false,
+                message: "Libro no encontrado"
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            data: libro,
+            message: `Se encontró el libro con ID: ${bookId}`
+        });
+
+    } catch (error) {
+        console.error("Error al obtener el libro:", error);
+        res.status(500).json({
+            success: false,
+            message: "Error interno del servidor al obtener el libro"
+        });
+    }
+});
 
 
 // POST - Agregar un nuevo libro
