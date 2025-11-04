@@ -82,7 +82,6 @@ app.use(express.json());
 // GET - Obtener todos los libros
 app.get("/api/books", (req, res) => {
     try {
-        console.log("Solicitud para obtener todos los libros");
         
         res.status(200).json({
             success: true,
@@ -92,7 +91,6 @@ app.get("/api/books", (req, res) => {
         });
         
     } catch (error) {
-        console.error("Error al obtener libros:", error);
         res.status(500).json({
             success: false,
             message: "Error interno del servidor al obtener los libros"
@@ -100,12 +98,10 @@ app.get("/api/books", (req, res) => {
     }
 });
 
-
 // GET - Obtener un libro por su ID
 app.get("/api/books/:id", (req, res) => {
     try {
-        const bookId = parseInt(req.params.id);
-        console.log(`Solicitud para obtener el libro con ID: ${bookId}`);               
+        const bookId = parseInt(req.params.id);               
 
         const libro = libros.find(b => b.id === bookId);
         if (!libro) {
@@ -122,14 +118,12 @@ app.get("/api/books/:id", (req, res) => {
         });
 
     } catch (error) {
-        console.error("Error al obtener el libro:", error);
         res.status(500).json({
             success: false,
             message: "Error interno del servidor al obtener el libro"
         });
     }
 });
-
 
 // POST - Agregar un nuevo libro
 app.post("/api/books", (req, res) => {
@@ -150,7 +144,7 @@ app.put ('/api/book/:id', (req, res) => {
     const id = req.params.id;
     const libro = req.body;
     let exist = false;
-    console.log(id);
+    
     libros.forEach(lbook =>{
         if(lbook.id == id){
             exist = true;
@@ -166,9 +160,6 @@ app.put ('/api/book/:id', (req, res) => {
         res.status(404).send({message: 'Libro no encontrado'});
     }
 });
-
-
-
 
 // DELETE - Eliminar un libro por su ID
 app.delete("/api/books/:id", (req, res) => {
