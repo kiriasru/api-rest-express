@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 const PORT = 3000;
 
-// Simular base con libros
 let libros = [
     {
         id: 1,
@@ -76,23 +75,99 @@ let libros = [
     }
 ];
 
-// Middleware
 app.use(express.json());
 
-// GET - Obtener todos los libros
+app.get("/api/books", (req, res) => {
+    try {
+        
+        res.status(200).json({
+            success: true,
+            data: libros,
+            count: libros.length,
+            message: `Se encontraron ${libros.length} libros`
+        });
+        
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Error interno del servidor al obtener los libros"
+        });
+    }
+});
 
+app.get("/api/books/:id", (req, res) => {
+    try {
+        const bookId = parseInt(req.params.id);               
 
-// GET - Obtener un libro por su ID
+        const libro = libros.find(b => b.id === bookId);
+        if (!libro) {
+            return res.status(404).json({
+                success: false,
+                message: "Libro no encontrado"
+            });
+        }
 
+        res.status(200).json({
+            success: true,
+            data: libro,
+            message: `Se encontró el libro con ID: ${bookId}`
+        });
 
-// POST - Agregar un nuevo libro
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Error interno del servidor al obtener el libro"
+        });
+    }
+});
 
+app.post("/api/books", (req, res) => {
+    const libro = req.body;
+    const existe = libros.some(libr => libr.id === libro.id);
 
-// PUT - Actualizar un libro existente.
+    if (existe) {
+        res.status(409).json({status: 409, message: "ID duplicado"});
+    } else {
+        libros.push(libro);
+        res.json({status: 200, message: "Success", data: libros});
+    }
 
+});
 
-// DELETE - Eliminar un libro por su ID
+app.put ('/api/book/:id', (req, res) => {
+    const id = req.params.id;
+    const libro = req.body;
+    let exist = false;
+    
+    libros.forEach(lbook =>{
+        if(lbook.id == id){
+            exist = true;
+            lbook.titulo = libro.titulo;
+            lbook.autor = libro.autor;
+            lbook.genero = libro.genero;
+            lbook.anioPublicacion = libro.anioPublicacion;  
+        }
+    });
+    if(exist){
+        res.status(200).send({message: 'Libro actualizado correctamente'});
+    }else{
+        res.status(404).send({message: 'Libro no encontrado'});
+    }
+});
 
+app.delete("/api/books/:id", (req, res) => {
+
+    const id = parseInt(req.params.id);
+    const filtroLibros = libros.filter(libro => libro.id !== id);
+
+    if (filtroLibros.length !== libros.length) {
+        libros = filtroLibros;
+        res.json({status: 200, message: "Libro eliminado exitosamente"});
+    } else {
+        res.status(404).json({status: 404, message: "Libro no encontrado"});
+    }
+
+});
 
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en http://localhost:${PORT}`);
